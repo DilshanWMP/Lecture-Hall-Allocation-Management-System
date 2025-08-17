@@ -1,4 +1,6 @@
-import Logo from '../assets/logo.png';
+import Logo from '../assets/images/logo.png';
+import Hamburger from '../assets/icons/Hamburger.png';
+import { navLinks } from '../constants';
 
 const Nav = () => {
   return (
@@ -9,13 +11,21 @@ const Nav = () => {
                   width={250}
                 />
             </a>
+
             <ul className='flex-1 flex justify-center items-center gap-16 max-lg:hidden'>
-              <li className='font-montserrat leading-normal text-lg text-neutral'>Home</li>
-              <li className='font-montserrat leading-normal text-lg text-white'>Time Table</li>
-              <li className='font-montserrat leading-normal text-lg text-white'>Schedule Allocation</li>
-              <li className='font-montserrat leading-normal text-lg text-white'>Modules</li>
-              <li className='font-montserrat leading-normal text-lg text-white'>Sign in / Explore more</li>
+              {navLinks.map((link) => (
+                <li key={link.href} className='font-montserrat
+                  leading-normal 
+                  text-lg 
+                  text-neutral'>
+                  <a href={link.href}>{link.lable}</a>
+                </li>
+              ))}
             </ul>
+
+            <div className='hidden max-lg:block max-lg:cursor-pointer'>
+              <img src={Hamburger} alt="Hamburger" width={25} height={25}/>
+            </div>
         </nav>
     </header>
   )
