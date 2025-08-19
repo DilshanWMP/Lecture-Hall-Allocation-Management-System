@@ -1,24 +1,19 @@
-import { AboutUs, Footer, Hero, Services } from "./sections";
-import Nav from "./components/Nav";
+import { Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Timetable from './pages/Timetable'
+import ScheduleAllocation from './pages/ScheduleAllocation'
+import Modules from './pages/Modules'
+import SignIn from './pages/SignIn'
 
 const App = () => {
   return (
-    <main className="relative">
-      <Nav/>
-      <section className='xl:padding-l wide:padding-r '>
-        <Hero/>
-      </section>
-      
-      <section className='padding'>
-        <AboutUs/>
-      </section>
-      <section className='padding-x py-10'>
-        <Services/>
-      </section>
-      <section className=' bg-black padding-x padding-t pb-8'>
-        <Footer/>
-      </section>
-    </main>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/timetable" element={<Timetable />} />
+      <Route path="/scheduleallocation" element={<ScheduleAllocation />} />
+      <Route path="/modules" element={<Modules />} />
+      <Route path="/signin" element={<SignIn />} />
+    </Routes>
   )
 }
 
