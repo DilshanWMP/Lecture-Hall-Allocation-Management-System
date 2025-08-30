@@ -13,11 +13,11 @@ const Nav = () => {
                 />
             </Link>
 
-            <ul className='flex-1 flex justify-center items-center gap-16 max-lg:hidden'>
+            <ul className='flex-1 flex justify-evenly items-center gap-16 max-lg:hidden'>
               {navLinks.map((link) => (
                 <li key={link.href} className='font-montserrat
                   leading-normal 
-                  text-lg 
+                  text-2xl 
                   text-neutral'>
                   <Link to={link.href.replace('#', '')}>{link.lable}</Link>
                 </li>
