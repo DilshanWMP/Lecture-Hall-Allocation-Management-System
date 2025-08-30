@@ -21,4 +21,13 @@ export const service = [
         label: "Conflict-Free Scheduling",
         subtext: "Prevents double bookings and sends instant alerts for any scheduling overlaps, ensuring smooth operations."
     }
-]
+];
+
+export const signInBenefits = [
+    "Manage lecture hall allocations and schedules",
+    "View and edit faculty timetables",
+    "Track utilization statistics and reports",
+    "Receive important system notifications",
+    "Manage user permissions and access levels",
+    "Generate operational reports and analytics"
+];

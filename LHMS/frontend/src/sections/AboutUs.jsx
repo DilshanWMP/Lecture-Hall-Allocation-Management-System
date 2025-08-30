@@ -3,7 +3,7 @@ import lectureHall from "../assets/images/lectureHall.jpg"
 
 const AboutUs = () => {
   return (
-    <section id="about-us" className="flex justify-center items-center max-lg:flex-col gap-10 w-full max-container ">
+    <section id="about-us" className="flex justify-center items-center max-lg:flex-col-reverse gap-20 w-full max-container ">
       <div className="flex-1 flex justify-center items-center">
         <div className="relative w-[570px] h-[380px]">
           <img src={lectureHall} width={570} height={380} className="rounded-3xl"/>"
