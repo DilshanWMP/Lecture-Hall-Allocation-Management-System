@@ -3,41 +3,61 @@ import { useNavigate } from 'react-router-dom';
 import Nav from "../components/Nav";
 import Footer from "../sections/Footer";
 import Calendar from "../components/Calendar";
-import { lectureHalls, timeSlots } from "../constants";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import { lectureHalls, timeSlots, initialModules } from "../constants";
 
 const Timetable = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedModule, setSelectedModule] = useState("");
   
-  // Mock data for bookings
-  const [bookings, setBookings] = useState([
-    { hall: "LT1 (300)", timeSlot: "8:00 - 8:55", date: new Date(2025, 8, 3), bookedBy: "Dr. Smith", course: "EES204" },
-    { hall: "NLH1 (130)", timeSlot: "9:50 - 10:45", date: new Date(2025, 8, 3), bookedBy: "Prof. Johnson", course: "CS301" },
-    { hall: "DO1 (140)", timeSlot: "14:25 - 15:20", date: new Date(2025, 8, 3), bookedBy: "Dr. Brown", course: "MATH202" },
-  ]);
+  // Empty bookings array
+  const [bookings, setBookings] = useState([]);
   
   const handleDateSelect = (date) => {
     setSelectedDate(date);
     setSelectedSlot(null);
+    setSelectedModule("");
   };
   
   const handleSlotClick = (hall, timeSlot) => {
-    const isLoggedIn = false;
+    setSelectedSlot({ hall, timeSlot });
+  };
+  
+  const handleBook = () => {
+    const isLoggedIn = false; // This would come from your auth context
+    
     if (!isLoggedIn) {
       navigate('/signin');
       return;
     }
     
-    const isBooked = bookings.some(booking => 
-      booking.hall === hall && 
-      booking.timeSlot === timeSlot && 
-      booking.date.toDateString() === selectedDate.toDateString()
-    );
-    
-    if (!isBooked) {
-      setSelectedSlot({ hall, timeSlot });
+    if (!selectedModule) {
+      alert("Please select a module");
+      return;
     }
+    
+    if (!selectedSlot) {
+      alert("Please select a time slot");
+      return;
+    }
+    
+    // Add the booking
+    const newBooking = {
+      hall: selectedSlot.hall,
+      timeSlot: selectedSlot.timeSlot,
+      date: selectedDate,
+      moduleCode: selectedModule
+    };
+    
+    setBookings([...bookings, newBooking]);
+    alert(`Booked ${selectedSlot.hall} for ${selectedSlot.timeSlot} with module ${selectedModule}`);
+    
+    // Reset form
+    setSelectedSlot(null);
+    setSelectedModule("");
   };
   
   const isSlotBooked = (hall, timeSlot) => {
@@ -55,7 +75,7 @@ const Timetable = () => {
       b.date.toDateString() === selectedDate.toDateString()
     );
     
-    return booking ? `${booking.course} - ${booking.bookedBy}` : '';
+    return booking ? booking.moduleCode : '';
   };
 
   return (
@@ -63,20 +83,71 @@ const Timetable = () => {
       <Nav />
       
       <div className="pt-28 padding-x padding-b">
-        <div className="max-container pt-20">
-          {/* Header Section with Calendar and Selected Date */}
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
+        <div className="max-container pt-20 mt-5">
+          {/* Header Section with Calendar and Booking Form */}
+          <div className="flex flex-col lg:flex-row gap-8 mb-8 items-start">
+            {/* Booking Form - Fixed width */}
+            <div className="w-full lg:w-96 bg-white rounded-3xl shadow-3xl p-6">
+              <h2 className="font-palanquin text-2xl font-bold text-primary mb-6">Book Lecture Hall</h2>
+              
+              <div className="space-y-6">
+                <div>
+                  <label className="block font-montserrat text-lg text-slate-gray mb-2">Selected Date</label>
+                  <p className="font-montserrat text-md bg-neutral p-3 rounded-lg">
+                    {selectedDate.toLocaleDateString('en-US', { 
+                      weekday: 'long', 
+                      day: 'numeric',
+                      month: 'long', 
+                      year: 'numeric'
+                    })}
+                  </p>
+                </div>
+                
+                {selectedSlot && (
+                  <div>
+                    <label className="block font-montserrat text-lg text-slate-gray mb-2">Selected Slot</label>
+                    <p className="font-montserrat text-md bg-neutral p-3 rounded-lg">
+                      Hall: {selectedSlot.hall}<br />
+                      Time: {selectedSlot.timeSlot}
+                    </p>
+                  </div>
+                )}
+                
+                <div>
+                  <label htmlFor="module" className="block font-montserrat text-lg text-slate-gray mb-2">Select Module</label>
+                  <select
+                    id="module"
+                    value={selectedModule}
+                    onChange={(e) => setSelectedModule(e.target.value)}
+                    className="w-full px-4 py-3 border border-neutral rounded-lg focus:outline-none focus:ring-2 focus:ring-coral-red font-montserrat"
+                  >
+                    <option value="">Select a module</option>
+                    {initialModules.map(module => (
+                      <option key={module.id} value={module.code}>
+                        {module.name} ({module.code})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <Button
+                  label="Book"
+                  className="w-full rounded-lg py-3 px-4 hover:bg-opacity-90 transition-all duration-300 border-none font-medium"
+                  onClick={handleBook}
+                />
+              </div>
+            </div>
 
-            {/* Calendar - Top Right Side */}
-            <div className="lg:w-2/3 flex justify-end">
-              <div className="w-full max-w-sm">
+            {/* Calendar - Takes remaining space */}
+            <div className="flex-1 flex justify-center lg:justify-end">
+              <div className="w-full max-w-md">
                 <Calendar onDateSelect={handleDateSelect} selectedDate={selectedDate} />
               </div>
             </div>
           </div>
 
-          {/* Full Width Timetable */}
-          <div className="w-full">
+          {/* Timetable - Full Width */}
+          <div>
             <div className="bg-white rounded-3xl shadow-3xl p-6">
               <h3 className="font-palanquin text-2xl font-bold mb-6 text-center text-primary">
                 Lecture Hall Timetable - {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
@@ -104,7 +175,7 @@ const Timetable = () => {
                         </td>
                         {lectureHalls.map(hall => {
                           const isBooked = isSlotBooked(hall, timeSlot);
-                          const bookingDetails = getBookingDetails(hall, timeSlot);
+                          const moduleCode = getBookingDetails(hall, timeSlot);
                           
                           return (
                             <td 
@@ -114,18 +185,9 @@ const Timetable = () => {
                                   ? 'bg-coral-red text-white' 
                                   : 'hover:bg-neutral'}`}
                               onClick={() => handleSlotClick(hall, timeSlot)}
-                              title={isBooked ? bookingDetails : `Click to book ${hall} for ${timeSlot}`}
+                              title={isBooked ? `Booked: ${moduleCode}` : `Click to book ${hall} for ${timeSlot}`}
                             >
-                              {isBooked ? (
-                                <div className="flex flex-col">
-                                  <span className="font-bold">Booked</span>
-                                  <span className="text-[10px] mt-1">
-                                    {getBookingDetails(hall, timeSlot).split(' - ')[0]}
-                                  </span>
-                                </div>
-                              ) : (
-                                'Available'
-                              )}
+                              {isBooked ? moduleCode : 'Available'}
                             </td>
                           );
                         })}
