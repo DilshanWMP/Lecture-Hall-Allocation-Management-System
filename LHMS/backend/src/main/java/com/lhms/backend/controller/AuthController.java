@@ -67,4 +67,14 @@ public class AuthController {
         }
         return ResponseEntity.status(401).body("Invalid token");
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody User user) {
+        if (userService.getUserByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        }
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.ok(createdUser);
+    }
+
 }

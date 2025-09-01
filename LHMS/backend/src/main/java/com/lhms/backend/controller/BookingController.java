@@ -2,12 +2,15 @@ package com.lhms.backend.controller;
 
 import com.lhms.backend.dto.BookingRequest;
 import com.lhms.backend.entity.Booking;
+import com.lhms.backend.entity.User;
 import com.lhms.backend.service.BookingService;
+import com.lhms.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,9 +20,12 @@ import java.util.List;
 public class BookingController {
 
     private final BookingService bookingService;
+    private final UserService userService;
 
-    public BookingController(BookingService bookingService) {
+    // ✅ inject both BookingService and UserService via constructor
+    public BookingController(BookingService bookingService, UserService userService) {
         this.bookingService = bookingService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -34,7 +40,8 @@ public class BookingController {
     }
 
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")
+    // ⚠️ changed principal.id check (Spring User doesn’t expose id)
+    @PreAuthorize("hasRole('ADMIN') or #userId == @userService.getUserByEmail(authentication.name).get().userId")
     public List<Booking> getBookingsByUser(@PathVariable Long userId) {
         return bookingService.getBookingsByUser(userId);
     }
@@ -51,25 +58,20 @@ public class BookingController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> createBooking(@Valid @RequestBody BookingRequest bookingRequest, Authentication authentication) {
-        try {
-            // Get user ID from authentication (you'll need to implement this)
-            // For now, using a placeholder - you'll need to modify this based on your user ID extraction
-            Long userId = 1L; // Placeholder - implement proper user ID extraction
+    public ResponseEntity<?> createBooking(@Valid @RequestBody BookingRequest req, Authentication auth) {
+        String email = auth.getName();  // Comes from JwtAuthenticationFilter
+        User currentUser = userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-            Booking booking = new Booking();
-            booking.setBookingDate(bookingRequest.getBookingDate());
-            booking.setTimeSlot(bookingRequest.getTimeSlot());
+        Booking booking = new Booking();
+        booking.setBookingDate(req.getBookingDate());
+        booking.setTimeSlot(req.getTimeSlot());
 
-            Booking createdBooking = bookingService.createBooking(
-                    booking, userId, bookingRequest.getModuleId(), bookingRequest.getHallId()
-            );
+        Booking created = bookingService.createBooking(
+                booking, currentUser.getUserId(), req.getModuleId(), req.getHallId()
+        );
 
-            return ResponseEntity.ok(createdBooking);
-
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")
@@ -91,5 +93,4 @@ public class BookingController {
         }
         return ResponseEntity.notFound().build();
     }
-
 }

@@ -25,28 +25,29 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
-        this.customUserDetailsService = customUserDetailsService;
+    // in SecurityConfig
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    public SecurityConfig(CustomUserDetailsService uds, JwtAuthenticationFilter f) {
+        this.customUserDetailsService = uds;
+        this.jwtAuthenticationFilter = f;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/modules/**").permitAll()
-                        .requestMatchers("/api/lecturehalls/**").permitAll()
-                        .requestMatchers("/api/bookings/date/**").permitAll()
-                        .requestMatchers("/api/bookings/hall/**").permitAll()
+                        .requestMatchers("/api/bookings/date/**", "/api/bookings/hall/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .userDetailsService(customUserDetailsService);
-
+                .userDetailsService(customUserDetailsService)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // <-- add this
         return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
