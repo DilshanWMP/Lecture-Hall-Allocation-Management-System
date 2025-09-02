@@ -54,13 +54,13 @@ export const timeSlots = [
 
 // Module data
 export const initialModules = [
-  { id: 1, name: "Advance Data Structures and Algorithms", code: "EC4201" },
-  { id: 2, name: "Computer Architecture", code: "EC4202" },
-  { id: 3, name: "Database Systems", code: "EC4203" },
-  { id: 4, name: "Software Engineering Principles", code: "EC4205" },
-  { id: 5, name: "Software Testing and Quality Assurance", code: "EC4206" },
-  { id: 6, name: "Digital Logic Design", code: "EC4304" },
-  { id: 7, name: "Web Application Development", code: "EC4307" },
-  { id: 8, name: "Probability and Statistics", code: "IS4301" },
-  { id: 9, name: "Basic Economics", code: "IS4322" }
+//   { id: 1, name: "Advance Data Structures and Algorithms", code: "EC4201" },
+//   { id: 2, name: "Computer Architecture", code: "EC4202" },
+//   { id: 3, name: "Database Systems", code: "EC4203" },
+//   { id: 4, name: "Software Engineering Principles", code: "EC4205" },
+//   { id: 5, name: "Software Testing and Quality Assurance", code: "EC4206" },
+//   { id: 6, name: "Digital Logic Design", code: "EC4304" },
+//   { id: 7, name: "Web Application Development", code: "EC4307" },
+//   { id: 8, name: "Probability and Statistics", code: "IS4301" },
+//   { id: 9, name: "Basic Economics", code: "IS4322" }
 ];
