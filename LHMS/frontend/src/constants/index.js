@@ -39,20 +39,18 @@ export const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 // Timetable Constants
 export const lectureHalls = [
-    "Civil-COBEU (125)", "Civil-CSR (75)", "DO1 (140)", "DO2 (140)", 
-    "Electrical-ECC (75)", "ELTU1 (45)", "ELTU2 (60)", "ELTU3 (10)", 
-    "LR1 (130)", "LR2 (117)", "LT1 (300)", "LT2 (300)", 
-    "Mechanical-MLR (75)", "New Computer Center (40)", "NLH1 (130)", 
-    "NLH2 (130)", "NLH3 (130)", "NLH4 (50)", "LS Seminar Room (104)"
+    "Auditorium", "Old Computer Centre", "New Computer Center","DO1", "DO2", 
+    "Electrical-ECC", "Elecrical-ESR", "ELTU1", "ELTU2", "ELTU3", 
+    "LR1", "LR2", "LT1", "LT2", 
+    "NLH1", "NLH2", "NLH3", "NLH4", "IS Seminar Room"
 ];
 
 export const timeSlots = [
-    "8:00 - 8:55", "8:55 - 9:50", "9:50 - 10:45", "10:45 - 11:40",
-    "11:40 - 12:35", "12:35 - 13:30", "13:30 - 14:25", "14:25 - 15:20",
-    "15:20 - 16:15", "16:15 - 17:10", "17:10 - 18:05"
+    "8:30 - 9:30", "9:30 - 10:30", "10:30-11:30", "11:30 - 12:30",
+    "12:30 - 13:30", "13:30 - 14:30", "14:30 - 15:30", "15:30 - 16:30",
+    "16:30 - 17:30", "17:30 - 18:30", "18:30 - 19:30", "19:30 - 20:30"
 ];
 
-// Module data
 export const initialModules = [
 //   { id: 1, name: "Advance Data Structures and Algorithms", code: "EC4201" },
 //   { id: 2, name: "Computer Architecture", code: "EC4202" },
