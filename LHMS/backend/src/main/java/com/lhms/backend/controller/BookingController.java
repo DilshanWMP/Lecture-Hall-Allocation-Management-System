@@ -22,7 +22,7 @@ public class BookingController {
     private final BookingService bookingService;
     private final UserService userService;
 
-    // ✅ inject both BookingService and UserService via constructor
+
     public BookingController(BookingService bookingService, UserService userService) {
         this.bookingService = bookingService;
         this.userService = userService;

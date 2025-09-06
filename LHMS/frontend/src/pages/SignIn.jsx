@@ -21,7 +21,7 @@ const SignIn = () => {
       ...prev,
       [id]: value
     }));
-    setError(''); // Clear error when user starts typing
+    setError(''); 
   };
 
   const handleSubmit = async (e) => {
@@ -35,23 +35,26 @@ const SignIn = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
+        body: JSON.stringify({ 
           email: formData.email,
           password: formData.password
         })
+         
       });
 
       const data = await response.json();
+      console.log(response);
+     
 
       if (response.ok) {
-        // Save token to localStorage or context
+        
         localStorage.setItem('token', data.token);
         localStorage.setItem('userEmail', data.email);
         localStorage.setItem('isAdmin', data.admin);
         
-        // Redirect to home or dashboard
+       
         navigate('/');
-        window.location.reload(); // Refresh to update auth state
+        window.location.reload(); 
       } else {
         setError(data.message || 'Login failed. Please check your credentials.');
       }
@@ -69,7 +72,7 @@ const SignIn = () => {
       <section className="pt-20">
         <div className="pt-28 padding-x padding-b mt-10">
           <div className="max-container flex flex-col-reverse lg:flex-row gap-10">
-            {/* Left Column - Benefits */}
+
             <div className="flex-1 bg-primary p-10 rounded-3xl text-neutral">
               <h2 className="font-palanquin text-4xl font-bold mb-6">One Account, Complete Control</h2>
               <p className="font-montserrat text-xl mb-8">Sign in to your administrator account to manage all lecture hall operations from a single portal!</p>
@@ -84,7 +87,6 @@ const SignIn = () => {
               </ul>
             </div>
 
-            {/* Right Column - Login Form */}
             <div className="flex-1 flex justify-center items-start">
               <div className="w-full max-w-md bg-white rounded-3xl shadow-3xl p-8">
                 <h2 className="font-palanquin text-3xl font-bold text-primary mb-6 text-center">Administrator Login</h2>

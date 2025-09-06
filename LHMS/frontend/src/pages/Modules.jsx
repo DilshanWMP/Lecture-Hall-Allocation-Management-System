@@ -19,7 +19,8 @@ const Modules = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Fetch modules from backend
+
+
   const fetchModules = async () => {
     try {
       setLoading(true);
@@ -29,7 +30,7 @@ const Modules = () => {
     } catch (error) {
       console.error('Error fetching modules:', error);
       setError('Failed to load modules. Please try again.');
-      // Fallback to initial modules if API fails
+   
       setModules(initialModules);
     } finally {
       setLoading(false);
@@ -38,15 +39,15 @@ const Modules = () => {
 
   useEffect(() => {
     fetchModules();
-  }, []);
+  },[]);
 
-  // Filter modules based on search query
+
   const filteredModules = modules.filter(module => 
     module.moduleName?.toLowerCase().includes(searchQuery.toLowerCase()) || 
     module.moduleCode?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Handle form input changes
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentModule({
@@ -55,7 +56,7 @@ const Modules = () => {
     });
   };
 
-  // Handle form submission (add or update module)
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -72,7 +73,7 @@ const Modules = () => {
 
     try {
       if (isEditing) {
-        // Update existing module
+     
         await axios.put(`http://localhost:8088/api/modules/${currentModule.moduleId}`, 
           currentModule,
           {
@@ -83,7 +84,7 @@ const Modules = () => {
           }
         );
       } else {
-        // Add new module
+
         await axios.post('http://localhost:8088/api/modules', 
           currentModule,
           {
@@ -95,10 +96,10 @@ const Modules = () => {
         );
       }
       
-      // Refresh modules list
+     
       await fetchModules();
       
-      // Reset form
+ 
       setCurrentModule({ moduleId: null, moduleName: "", moduleCode: "", description: "" });
       setIsEditing(false);
       setError("");
@@ -109,7 +110,7 @@ const Modules = () => {
     }
   };
   
-  // Set module for editing
+  
   const handleEdit = (module) => {
     setCurrentModule({
       moduleId: module.moduleId,
@@ -120,7 +121,7 @@ const Modules = () => {
     setIsEditing(true);
   };
   
-  // Delete a module
+
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this module?")) {
       return;
@@ -139,7 +140,7 @@ const Modules = () => {
         }
       });
       
-      // Refresh modules list
+     
       await fetchModules();
       setError("");
       
@@ -149,14 +150,14 @@ const Modules = () => {
     }
   };
   
-  // Cancel editing
+
   const handleCancel = () => {
     setCurrentModule({ moduleId: null, moduleName: "", moduleCode: "", description: "" });
     setIsEditing(false);
     setError("");
   };
 
-  // Search modules from backend
+
   const handleSearch = async () => {
     try {
       setLoading(true);
@@ -166,7 +167,7 @@ const Modules = () => {
     } catch (error) {
       console.error('Error searching modules:', error);
       setError('Search failed. Showing all modules.');
-      await fetchModules(); // Fallback to all modules
+      await fetchModules(); 
     } finally {
       setLoading(false);
     }
@@ -187,7 +188,7 @@ const Modules = () => {
           )}
           
           <div className="flex flex-col lg:flex-row gap-10">
-            {/* Left Column - Add/Edit Module Form */}
+           
             <div className="lg:w-1/3">
               <div className="bg-white rounded-3xl shadow-3xl p-8">
                 <h2 className="font-palanquin text-2xl font-bold text-primary mb-6">
@@ -248,7 +249,6 @@ const Modules = () => {
               </div>
             </div>
             
-            {/* Right Column - Module List and Search */}
             <div className="lg:w-2/3">
               <div className="bg-white rounded-3xl shadow-3xl p-8">
                 <h2 className="font-palanquin text-2xl font-bold text-primary mb-6">Search Modules</h2>

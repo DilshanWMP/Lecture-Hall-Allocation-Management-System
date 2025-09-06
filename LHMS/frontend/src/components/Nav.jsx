@@ -9,7 +9,7 @@ const Nav = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
-  // Check authentication status on component mount and when storage changes
+  
   useEffect(() => {
     const checkAuthStatus = () => {
       const token = localStorage.getItem('token');
@@ -18,17 +18,17 @@ const Nav = () => {
       setIsAdmin(adminStatus);
     };
 
-    // Check initially
+   
     checkAuthStatus();
 
-    // Listen for storage changes (for when login/logout happens in other components)
+   
     const handleStorageChange = () => {
       checkAuthStatus();
     };
 
     window.addEventListener('storage', handleStorageChange);
     
-    // Also check on focus in case another tab changed auth state
+  
     window.addEventListener('focus', checkAuthStatus);
 
     return () => {
@@ -38,28 +38,28 @@ const Nav = () => {
   }, []);
 
   const handleSignOut = () => {
-    // Clear all auth-related data
+
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('isAdmin');
     
-    // Update state
+   
     setIsLoggedIn(false);
     setIsAdmin(false);
     
-    // Redirect to home page
+   
     navigate('/');
-    window.location.reload(); // Refresh to update the UI
+    window.location.reload(); 
   };
 
-  // Filter nav links based on authentication
+  
   const getFilteredNavLinks = () => {
     return navLinks.filter(link => {
-      // If user is logged in, show all links except Sign In
+    
       if (isLoggedIn && link.lable === 'Sign in / Explore more') {
         return false;
       }
-      // If user is not logged in, show all links
+     
       return true;
     });
   };
@@ -78,7 +78,7 @@ const Nav = () => {
             </li>
           ))}
           
-          {/* Show Sign Out button if logged in */}
+         
           {isLoggedIn && (
             <li className='font-montserrat leading-normal text-2xl text-neutral'>
               <button 

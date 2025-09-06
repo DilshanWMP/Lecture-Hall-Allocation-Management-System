@@ -34,12 +34,12 @@ const Calendar = ({ onDateSelect, selectedDate }) => {
     const firstDay = getFirstDayOfMonth(currentDate);
     const daysArray = [];
 
-    // Add empty cells for days before the first day of the month
+   
     for (let i = 0; i < firstDay; i++) {
       daysArray.push(<div key={`empty-${i}`} className="w-10 h-10"></div>);
     }
 
-    // Add cells for each day of the month
+   
     for (let day = 1; day <= daysInMonth; day++) {
       const isSelected = selectedDate && 
         selectedDate.getDate() === day && 

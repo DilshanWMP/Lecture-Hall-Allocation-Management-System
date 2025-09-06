@@ -21,7 +21,6 @@ const Timetable = () => {
   const [success, setSuccess] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   
-  // Check if user is authenticated and admin
   useEffect(() => {
     const token = localStorage.getItem('token');
     const adminStatus = localStorage.getItem('isAdmin') === 'true';
@@ -32,12 +31,10 @@ const Timetable = () => {
     }
   }, []);
 
-  // Create axios instance with auth header
   const api = axios.create({
     baseURL: 'http://localhost:8088/api'
   });
 
-  // Add request interceptor to include auth token
   api.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem('token');
@@ -51,7 +48,6 @@ const Timetable = () => {
     }
   );
 
-  // Add response interceptor to handle auth errors
   api.interceptors.response.use(
     (response) => response,
     (error) => {
@@ -67,14 +63,12 @@ const Timetable = () => {
     }
   );
 
-  // Fetch modules, lecture halls, and bookings from backend
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError('');
         
-        // These endpoints should be publicly accessible based on your SecurityConfig
         const [modulesResponse, lectureHallsResponse] = await Promise.all([
           axios.get('http://localhost:8088/api/modules'),
           axios.get('http://localhost:8088/api/lecturehalls')
@@ -83,7 +77,6 @@ const Timetable = () => {
         setModules(modulesResponse.data);
         setLectureHalls(lectureHallsResponse.data);
         
-        // Try to fetch bookings if user is authenticated
         const token = localStorage.getItem('token');
         if (token) {
           try {
@@ -124,7 +117,6 @@ const Timetable = () => {
       return;
     }
     
-    // Check if the slot is already booked
     const isBooked = isSlotBooked(hallId, timeSlot);
     if (isBooked) {
       setError('This time slot is already booked. Please select another.');
@@ -133,6 +125,7 @@ const Timetable = () => {
     
     setSelectedSlot({ hallId, hallName, timeSlot });
     setError('');
+    
   };
   
   const handleBook = async () => {
@@ -156,7 +149,6 @@ const Timetable = () => {
       setLoading(true);
       const formattedDate = selectedDate.toISOString().split('T')[0];
       
-      // Find the module ID from the selected module code
       const module = modules.find(m => m.moduleCode === selectedModule);
       if (!module) {
         setError("Selected module not found");
@@ -172,16 +164,13 @@ const Timetable = () => {
       
       const response = await api.post('/bookings', bookingData);
       
-      // Add the new booking to the state
       setBookings([...bookings, response.data]);
       setSuccess(`Successfully booked ${selectedSlot.hallName} for ${selectedSlot.timeSlot} with module ${selectedModule}`);
       
-      // Reset form
       setSelectedSlot(null);
       setSelectedModule("");
       setError('');
       
-      // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
       
     } catch (error) {
@@ -217,11 +206,9 @@ const Timetable = () => {
     try {
       await api.delete(`/bookings/${bookingId}`);
       
-      // Remove the booking from the state
       setBookings(bookings.filter(booking => booking.bookingId !== bookingId));
       setSuccess('Booking deleted successfully');
       
-      // Clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
       
     } catch (error) {
@@ -260,7 +247,6 @@ const Timetable = () => {
       
       <div className="pt-28 padding-x padding-b">
         <div className="max-container pt-20 mt-5">
-          {/* Display success and error messages */}
           {success && (
             <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-center">
               {success}
@@ -272,16 +258,13 @@ const Timetable = () => {
             </div>
           )}
           
-          {/* Authentication status */}
           {!localStorage.getItem('token') && (
             <div className="mb-4 p-3 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg text-center">
               Please sign in to view and manage bookings
             </div>
           )}
           
-          {/* Header Section with Calendar and Booking Form */}
           <div className="flex flex-col lg:flex-row gap-8 mb-8 items-start">
-            {/* Booking Form - Fixed width */}
             <div className="w-full lg:w-96 bg-white rounded-3xl shadow-3xl p-6">
               <h2 className="font-palanquin text-2xl font-bold text-primary mb-6">Book Lecture Hall</h2>
               
@@ -341,7 +324,6 @@ const Timetable = () => {
               </div>
             </div>
 
-            {/* Calendar - Takes remaining space */}
             <div className="flex-1 flex justify-center lg:justify-end">
               <div className="w-full max-w-md">
                 <Calendar onDateSelect={handleDateSelect} selectedDate={selectedDate} />
@@ -349,7 +331,6 @@ const Timetable = () => {
             </div>
           </div>
 
-          {/* Timetable - Full Width */}
           <div>
             <div className="bg-white rounded-3xl shadow-3xl p-6">
               <h3 className="font-palanquin text-2xl font-bold mb-6 text-center text-primary">
