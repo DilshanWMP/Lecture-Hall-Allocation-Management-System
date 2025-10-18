@@ -6,5 +6,5 @@ Feature: Booking creation
   Scenario: Create booking for an available slot
     Given an admin user exists with email "praveenwmd@gmail.com"
     And I am authenticated as "praveenwmd@gmail.com"
-    When I create a booking with moduleId 10, hallId 12, date "2025-09-25" and timeSlot "8:00 - 8:55"
+    When I create a booking with moduleId 10, hallId 15, date "2025-09-25" and timeSlot "8:00 - 8:55"
     Then the booking is created successfully
